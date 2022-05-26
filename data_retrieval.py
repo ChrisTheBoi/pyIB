@@ -31,6 +31,3 @@ def get_company_concept_(ticker,tag=''):
     cik_num = get_cik(ticker)
     request = edgar.get_company_concept(cik=cik_num,taxonomy='us-gaap',tag=tag)
 
-
-
-print(get_submissions_('aapl'))
