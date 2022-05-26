@@ -27,7 +27,7 @@ def get_submissions_(ticker):
     request = edgar.get_submissions(cik=cik_num)
     return request
 
-def get_company_concept_(ticker,tag=''):
+def get_company_concept_(ticker,tag,taxonomy='us-gaap'):
     cik_num = get_cik(ticker)
-    request = edgar.get_company_concept(cik=cik_num,taxonomy='us-gaap',tag=tag)
-
+    request = edgar.get_company_concept(cik=cik_num,taxonomy=taxonomy,tag=tag)
+    return request
