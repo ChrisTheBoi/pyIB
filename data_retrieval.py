@@ -1,4 +1,3 @@
-from sec_edgar_api import EdgarClient
 from bs4 import BeautifulSoup
 import urllib.request as url_r
 from user_agent import generate_user_agent
