@@ -11,9 +11,8 @@ s = requests.Session()
 random_ua = generate_user_agent()
 
 heads = {'Host': 'www.sec.gov', 'Connection': 'close',
-         'Accept': 'application/json, text/javascript, */*; q=0.01',
-         'X-Requested-With': 'XMLHttpRequest',
-         'User-Agent': random_ua,
+         'Accept': 'application/json, text/javascript, */*; q=0.01', 'X-Requested-With': 'XMLHttpRequest',
+         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
          }
 
 # the default filepath where a company's CIK and exchange are retrieved from
@@ -72,26 +71,16 @@ def get_exchange(ticker):
 
                 return exchange
 
-
 def download_master_index(year):
-    """downloads master index from SEC's website"""
-
-    directory_path = os.getcwd() + '/data/edgar_master_index/'
-
-    directory = os.listdir(directory_path)
-
     for qtr in range(1, 5):
         url = f"https://www.sec.gov/Archives/edgar/full-index/{year}/QTR{qtr}/master.idx"
-        response = s.get(url, headers=heads, stream=True)
+        response = requests.get(url, headers=heads)
+        print(url)
         response.raise_for_status()
         down_direct = os.getcwd() + '/data/edgar_master_index'
 
         with open(f'{down_direct}/master{year}QTR{qtr}.idx', 'wb') as f:
-            if f not in directory:
-                f.write(response.content)
-
-            else:
-                continue
+            f.write(response.content)
 
 
 def get_filings(ticker, form='10-K'):
