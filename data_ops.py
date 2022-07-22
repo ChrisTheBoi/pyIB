@@ -14,14 +14,14 @@ from sqlalchemy_utils import database_exists, create_database
 class DataJSON:
 
     def __init__(self, ticker):
-        self.filepath = Path(''.join([os.getcwd(), '/data/company_tickers.json']))
+        self.filepath = str(Path(''.join([os.getcwd(), '/data/company_tickers.json'])))
         self.ticker = ticker
 
 
     def load_json(self):
         """for loading data from the default filepath, but, if necessary,
         also loads other json files"""
-
+        
         try:
             data = pd.read_json(self.filepath)
 
@@ -92,10 +92,10 @@ class DataSEC(DataJSON):
                 response = requests.get(url, headers=self.heads)
                 response.raise_for_status()
 
-                down_direct = Path(''.join([os.getcwd(),'/data/edgar_master_index']))
+                down_direct = str(Path(''.join([os.getcwd(),'/data/edgar_master_index'])))
 
                 filename = f'/master{year}QTR{qtr}.txt'
-                path = Path(''.join([down_direct, filename]))
+                path = str(Path(''.join([down_direct, filename])))
 
                 if not os.path.exists(path):
                     print(url)
@@ -148,12 +148,12 @@ class DataSEC(DataJSON):
             cwd = os.getcwd()
             dst = f'/data/{self.ticker.lower()}_reports/{form}s/csv/{folder}/'
 
-            directory = Path(''.join([cwd, dst]))
+            directory = str(Path(''.join([cwd, dst])))
             if not os.path.exists(directory):
                 os.makedirs(directory)
 
             temporary_xlsx = f'{self.ticker.lower()}.xlsx'
-            temp_path = Path(''.join([cwd, '/', temporary_xlsx]))
+            temp_path = str(Path(''.join([cwd, '/', temporary_xlsx])))
             if req.status_code == 200:
                 with open(temp_path, 'wb') as f:
                     for chunk in req.iter_content(chunk_size=15000):
@@ -163,7 +163,7 @@ class DataSEC(DataJSON):
             year_ended = self.get_year(df)[0]
 
             filename = f'{self.ticker.lower()}_{year_ended}.csv'
-            path = Path(''.join([cwd, dst, filename]))
+            path = str(Path(''.join([cwd, dst, filename])))
 
             if not os.path.exists(path):
 
@@ -195,7 +195,7 @@ class DataSEC(DataJSON):
         these endpoints are used to download excel files of company financials
         provided by the SEC"""
 
-        master_index = Path(''.join([os.getcwd(), '/data/edgar_master_index/']))
+        master_index = str(Path(''.join([os.getcwd(), '/data/edgar_master_index/'])))
 
         directory = os.listdir(master_index)
 
@@ -210,9 +210,9 @@ class DataSEC(DataJSON):
         while i < len(directory):
 
             for file in directory:
-                doc = master_index + file
+                doc = str(Path(''.join([master_index,'/', file])))
 
-                with open(doc, encoding='utf-8') as f:
+                with open(doc) as f:
                     try:
                         regex = r.findall(f.read())
 
@@ -224,7 +224,7 @@ class DataSEC(DataJSON):
 
             pbar.update(1)
             i += 1
-
+        pbar.close()
         return downloads
 
 
@@ -292,8 +292,8 @@ class DataSEC(DataJSON):
 
         sheets = []
 
-        path = Path(''.join([os.getcwd(), f'/data/{self.ticker}_reports/'
-                                     f'{form}s/csv/income_statements/']))
+        path = str(Path(''.join([os.getcwd(), f'/data/{self.ticker}_reports/'
+                                     f'{form}s/csv/income_statements/'])))
 
         if not os.path.exists(path):
             self.download_files(statement='income', form=form)
@@ -320,8 +320,8 @@ class DataSEC(DataJSON):
 
         sheets = []
 
-        path = Path(''.join([os.getcwd(), f'/data/{self.ticker.lower()}_reports/'
-                                     f'{form}s/csv/balance_sheets/']))
+        path = str(Path(''.join([os.getcwd(), f'/data/{self.ticker.lower()}_reports/'
+                                     f'{form}s/csv/balance_sheets/'])))
 
         if not os.path.exists(path):
             self.download_files(statement='balance', form=form)
@@ -348,8 +348,8 @@ class DataSEC(DataJSON):
 
         sheets = []
 
-        path = Path(''.join([os.getcwd(), f'/data/{self.ticker.lower()}_reports/'
-                                     f'{form}s/csv/cash_flow_statements/']))
+        path = str(Path(''.join([os.getcwd(), f'/data/{self.ticker.lower()}_reports/'
+                                     f'{form}s/csv/cash_flow_statements/'])))
 
         if not os.path.exists(path):
             self.download_files(statement='cash', form=form)
@@ -403,9 +403,9 @@ class DataSQL(DataSEC):
                 folder = 'cash_flow_statements'
 
             try:
-                path = Path(''.join(
+                path = str(Path(''.join(
                     [os.getcwd(), f'/data/{self.ticker.lower()}_reports/'
-                                  f'{form}s/csv/{folder}/']))
+                                  f'{form}s/csv/{folder}/'])))
 
                 if not os.path.exists(path):
                     os.makedirs(path)

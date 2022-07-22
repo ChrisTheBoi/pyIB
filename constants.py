@@ -2,7 +2,6 @@ import json
 import os
 import re
 import time
-
 import numpy as np
 import pandas as pd
 import requests
@@ -19,7 +18,7 @@ heads = {'Host': 'www.sec.gov', 'Connection': 'close',
          }
 
 # the default filepath where a company's CIK and exchange are retrieved from
-filepath = os.getcwd() + '/data/company_tickers.json'
+filepath = str(Path(''.join([os.getcwd(),'/data/company_tickers.json'])))
 
 
 def load_json(filepath=filepath):
